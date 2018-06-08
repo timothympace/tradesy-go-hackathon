@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="681cb0c2-3500-4e15-9773-f97c81e0b150" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/web-server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/protoc_go.sh" beforeDir="false" afterPath="$PROJECT_DIR$/protoc_go.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/client/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/server/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/user/user.pb.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/user/user.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/item-service/item/item.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/item-service/item/item.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/protoc_go.sh" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +22,8 @@
       <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web-server/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="44" column="28" lean-forward="true" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="28" />
+            <state relative-caret-position="660">
+              <caret line="44" column="28" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="28" />
               <folding>
                 <element signature="e#14#112#0" expanded="true" />
                 <element signature="n#!!block;n#addShirt#0" />
@@ -31,8 +35,8 @@
       <file leaf-file-name="item.pb.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/item-service/item/item.pb.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="176" column="86" selection-start-line="176" selection-start-column="86" selection-end-line="176" selection-end-column="86" />
+            <state relative-caret-position="232">
+              <caret line="175" column="86" selection-start-line="175" selection-start-column="86" selection-end-line="175" selection-end-column="86" />
             </state>
           </provider>
         </entry>
@@ -236,8 +240,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/item-service/item/item.pb.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="176" column="86" selection-start-line="176" selection-start-column="86" selection-end-line="176" selection-end-column="86" />
+        <state relative-caret-position="232">
+          <caret line="175" column="86" selection-start-line="175" selection-start-column="86" selection-end-line="175" selection-end-column="86" />
         </state>
       </provider>
     </entry>
@@ -264,8 +268,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web-server/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="44" column="28" lean-forward="true" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="28" />
+        <state relative-caret-position="660">
+          <caret line="44" column="28" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="28" />
           <folding>
             <element signature="e#14#112#0" expanded="true" />
             <element signature="n#!!block;n#addShirt#0" />
