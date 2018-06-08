@@ -6,9 +6,10 @@ import (
 	"log"
 
 	itemPb "../item-service/item"
-	"google.golang.org/grpc"
 	"time"
 	"context"
+	"google.golang.org/grpc"
+	"fmt"
 )
 
 const (
@@ -17,20 +18,11 @@ const (
 
 var itemApiClient itemPb.ItemApiClient
 
-type Item struct {
-	Id   string  `json:"id"`
-	Name string  `json:"name"`
-	Brand string  `json:"brand"`
-	Size  string  `json:"size"`
-	Color string  `json:"color"`
-	Price float32 `json:"price"`
-}
-
 func allItems(w http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var items []*Item
+	var items []*itemPb.Item
 	itemStream, err := itemApiClient.GetItems(ctx, &itemPb.Empty{})
 	if err != nil {
 		log.Fatalf("could not get all items: %v", err)
@@ -41,12 +33,7 @@ func allItems(w http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			break
 		}
-		newItem := &Item{}
-		newItem.Id = item.Id
-		newItem.Name = item.Name
-		newItem.Price = item.Price
-		newItem.Brand = item.Brand
-		items = append(items, newItem)
+		items = append(items, item)
 	}
 
 
@@ -54,48 +41,27 @@ func allItems(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(itemJSON)
 }
-/*
-func addShirt(w http.ResponseWriter, req *http.Request) {
-	var price float64
 
-	err := req.ParseForm()
+func addItem(w http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	item := &itemPb.Item{}
+	err := json.NewDecoder(req.Body).Decode(item)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	price, err = strconv.ParseFloat(req.Form.Get("price"), 64)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
-	item := Item{Brand: req.Form.Get("brand"), Size: req.Form.Get("size"), Color: req.Form.Get("color"), Price: price}
-	itemList = append(itemList, item)
+	itemApiClient.AddItem(ctx, item)
 	w.WriteHeader(http.StatusCreated)
 }
 
-func writeShirts() {
-	itemJSON, _ := json.Marshal(itemList)
-	ioutil.WriteFile("items.json", itemJSON, os.ModePerm)
+func handleStatic(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Path[1:])
+	http.ServeFile(w, r, "../" + r.URL.Path[1:])
 }
-
-func init() {
-	file, err := ioutil.ReadFile("items.json")
-	if err == nil {
-		json.Unmarshal(file, &itemList)
-	}
-}
-
-func init() {
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt)
-	go func() {
-		<-c
-		writeShirts()
-		os.Exit(0)
-	}()
-}*/
 
 func main() {
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -106,6 +72,7 @@ func main() {
 	itemApiClient = itemPb.NewItemApiClient(conn)
 
 	http.HandleFunc("/allItems", allItems)
-	//http.HandleFunc("/addShirt", addShirt)
+	http.HandleFunc("/addItem", addItem)
+	http.HandleFunc("/static/", handleStatic)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
