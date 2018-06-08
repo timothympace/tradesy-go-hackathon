@@ -21,7 +21,7 @@ func addUser(client pb.UserApiClient, user *pb.User) {
 		log.Fatalf("Could not create User: %v", err)
 	}
 	if resp.Success {
-		log.Printf("A new User has been added with id: %d", resp.Id)
+		log.Printf("A new User has been added with id: %s", resp.Id)
 	}
 }
 
@@ -32,7 +32,7 @@ func updateUser(client pb.UserApiClient, user *pb.User) {
 		log.Fatalf("Could not update User: %v", err)
 	}
 	if resp.Success {
-		log.Printf("A new User has been updated with id: %d", resp.Id)
+		log.Printf("A new User has been updated with id: %s", resp.Id)
 	}
 }
 
@@ -42,7 +42,7 @@ func deleteUser(client pb.UserApiClient, filter *pb.UserFilter) {
 		log.Fatalf("Could not delete User: %v", err)
 	}
 	if resp.Success {
-		log.Printf("A new has been deleted with id: %d", resp.Id)
+		log.Printf("A new has been deleted with id: %s", resp.Id)
 	}
 }
 
