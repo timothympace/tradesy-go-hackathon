@@ -28,8 +28,6 @@ func (s *server) AddUser(ctx context.Context, in *pb.User) (*pb.UserResponse, er
 
 // UpdateUser creates a new User
 func (s *server) UpdateUser(ctx context.Context, in *pb.User) (*pb.UserResponse, error) {
-	//s.savedUsers = append(s.savedUsers, in)
-	//return &pb.UserResponse{Id: in.Id, Success: true}, nil
 	for index, user := range s.savedUsers {
 		if in.Id != "" {
 			if strings.Contains(user.Id, in.Id) {

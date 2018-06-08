@@ -150,5 +150,4 @@ func main() {
 	// Filter with an empty Id
 	filter = &pb.UserFilter{Id: ""}
 	getUser(client, filter)
-
 }
