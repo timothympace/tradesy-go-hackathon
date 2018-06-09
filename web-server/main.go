@@ -9,14 +9,16 @@ import (
 	"time"
 	"context"
 	"google.golang.org/grpc"
-	"fmt"
+	userPb "../user-service/user"
 )
 
 const (
 	address     = "localhost:9090"
+	address2     = "localhost:9091"
 )
 
 var itemApiClient itemPb.ItemApiClient
+var userApiClient userPb.UserApiClient
 
 func allItems(w http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -69,8 +71,62 @@ func deleteItem(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fmt.Println(id.Id)
 	itemApiClient.DeleteItem(ctx, id)
+	w.WriteHeader(http.StatusOK)
+}
+
+func allUsers(w http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	var users []*userPb.User
+	userStream, err := userApiClient.GetUser(ctx, &userPb.UserFilter{Id: ""})
+	if err != nil {
+		log.Fatalf("could not get all items: %v", err)
+	}
+
+	for {
+		user, err := userStream.Recv()
+		if err != nil {
+			break
+		}
+		users = append(users, user)
+	}
+
+
+	itemJSON, _ := json.Marshal(users)
+	w.WriteHeader(http.StatusOK)
+	w.Write(itemJSON)
+}
+
+func addUser(w http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	user := &userPb.User{}
+	err := json.NewDecoder(req.Body).Decode(user)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+
+	userApiClient.AddUser(ctx, user)
+	w.WriteHeader(http.StatusCreated)
+}
+
+func deleteUser(w http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	id := &userPb.UserFilter{}
+	err := json.NewDecoder(req.Body).Decode(id)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	userApiClient.DeleteUser(ctx, id)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -86,9 +142,19 @@ func main() {
 	defer conn.Close()
 	itemApiClient = itemPb.NewItemApiClient(conn)
 
+	conn, err = grpc.Dial(address2, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	userApiClient = userPb.NewUserApiClient(conn)
+
 	http.HandleFunc("/allItems", allItems)
+	http.HandleFunc("/allUsers", allUsers)
 	http.HandleFunc("/addItem", addItem)
+	http.HandleFunc("/addUser", addUser)
 	http.HandleFunc("/deleteItem", deleteItem)
+	http.HandleFunc("/deleteUser", deleteUser)
 	http.HandleFunc("/static/", handlePublic)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

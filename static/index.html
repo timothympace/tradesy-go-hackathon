@@ -5,41 +5,93 @@
     <title>Tradesy Go Hackathon</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
+<style>
+    .flex {
+        display: flex;
+    }
+
+    .item {
+        flex: 1;
+        border: 1px solid black;
+    }
+</style>
 <body>
 
-<form id="item-list-form" method="POST">
-    <h2>List Items</h2>
-    <button>Submit</button>
-</form>
+<div class="flex">
+    <div class="item">
+        <form id="item-list-form" method="POST">
+            <h2>List Items</h2>
+            <button>Submit</button>
+        </form>
 
-<div id="item-list-table">
+        <div id="item-list-table">
 
+        </div>
+
+        <form id="item-add-form" method="POST">
+            <h2>Add Item</h2>
+            <label for="id">ID</label>
+            <input id="id" name="id">
+            <br>
+            <label for="name">Name</label>
+            <input id="name" name="name">
+            <br>
+            <label for="brand">Brand</label>
+            <input id="brand" name="brand">
+            <br>
+            <label for="price">Price</label>
+            <input id="price" name="price">
+            <br>
+            <button>Submit</button>
+        </form>
+
+        <form id="item-delete-form" method="POST">
+            <h2>Delete Item</h2>
+            <label for="id">ID</label>
+            <input id="id" name="id">
+            <br>
+            <button>Submit</button>
+        </form>
+    </div>
+    <div class="item">
+        <form id="user-list-form" method="POST">
+            <h2>List Users</h2>
+            <button>Submit</button>
+        </form>
+
+        <div id="user-list-table">
+
+        </div>
+
+        <form id="user-add-form" method="POST">
+            <h2>Add User</h2>
+            <label for="id">ID</label>
+            <input id="id" name="id">
+            <br>
+            <label for="name">Name</label>
+            <input id="name" name="name">
+            <br>
+            <label for="email">Email</label>
+            <input id="email" name="email">
+            <br>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone">
+            <br>
+            <button>Submit</button>
+        </form>
+
+        <form id="user-delete-form" method="POST">
+            <h2>Delete User</h2>
+            <label for="id">ID</label>
+            <input id="id" name="id">
+            <br>
+            <button>Submit</button>
+        </form>
+    </div>
+    <div class="item">
+
+    </div>
 </div>
-
-<form id="item-add-form" method="POST">
-    <h2>Add Item</h2>
-    <label for="id">ID</label>
-    <input id="id" name="id">
-    <br>
-    <label for="name">Name</label>
-    <input id="name" name="name">
-    <br>
-    <label for="brand">Brand</label>
-    <input id="brand" name="brand">
-    <br>
-    <label for="price">Price</label>
-    <input id="price" name="price">
-    <br>
-    <button>Submit</button>
-</form>
-
-<form id="item-delete-form" method="POST">
-    <h2>Delete Item</h2>
-    <label for="id">ID</label>
-    <input id="id" name="id">
-    <br>
-    <button>Submit</button>
-</form>
 
 
 <script src="main.js"></script>

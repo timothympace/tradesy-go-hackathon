@@ -43,7 +43,7 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.User) (*pb.UserResponse,
 func (s *server) GetUser(filter *pb.UserFilter, stream pb.UserApi_GetUserServer) error {
 	for _, user := range s.savedUsers {
 		if filter.Id != "" {
-			if !strings.Contains(user.Name, filter.Id) {
+			if !strings.Contains(user.Id, filter.Id) {
 				continue
 			}
 		}
