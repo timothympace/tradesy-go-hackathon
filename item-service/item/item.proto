@@ -16,9 +16,7 @@ syntax = "proto3";
 
 package item;
 
-// The greeting service definition.
 service ItemApi {
-    // Sends a greet`ing
     rpc GetItem (Id) returns (Item) {}
     rpc GetItems (Empty) returns (stream Item) {}
     rpc AddItem (Item) returns (Id) {}
@@ -26,7 +24,6 @@ service ItemApi {
     rpc UpdateItem (Item) returns (Id) {}
 }
 
-// The request message containing the user's name.
 message Item {
     string id = 1;
     string name = 2;
