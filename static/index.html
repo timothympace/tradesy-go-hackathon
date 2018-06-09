@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Tradesy Go Hackathon</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-Hello world
-<script>
-console.log("Hello world")
-</script>
+
+<form id="item-form" method="POST">
+    <label for="id">ID</label>
+    <input id="id" name="id">
+    <br>
+    <label for="name">Name</label>
+    <input id="name" name="name">
+    <br>
+    <label for="brand">Brand</label>
+    <input id="brand" name="brand">
+    <br>
+    <label for="price">Price</label>
+    <input id="price" name="price">
+    <br>
+    <button>Submit</button>
+</form>
+
+
+<script src="main.js"></script>
 </body>
 </html>

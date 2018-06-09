@@ -9,7 +9,6 @@ import (
 	"time"
 	"context"
 	"google.golang.org/grpc"
-	"fmt"
 )
 
 const (
@@ -59,7 +58,6 @@ func addItem(w http.ResponseWriter, req *http.Request) {
 }
 
 func handleStatic(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Path[1:])
 	http.ServeFile(w, r, "../" + r.URL.Path[1:])
 }
 
