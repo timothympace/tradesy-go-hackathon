@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -42,6 +43,7 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.User) (*pb.UserResponse,
 // GetUser returns all users by given filter
 func (s *server) GetUser(filter *pb.UserFilter, stream pb.UserApi_GetUserServer) error {
 	for _, user := range s.savedUsers {
+		fmt.Printf("user.Id: %v, filter.Id: %v", user.Id, filter.Id)
 		if filter.Id != "" {
 			if !strings.Contains(user.Id, filter.Id) {
 				continue

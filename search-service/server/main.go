@@ -88,7 +88,7 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 		}
 
 		// calling the streaming API
-		userFilter := &pbUser.UserFilter{Id: item.Id}
+		userFilter := &pbUser.UserFilter{Id: item.UserId}
 		userStream, err3 := userApiClient.GetUser(ctx2, userFilter)
 		if err3 != nil {
 			log.Fatalf("Error on get user: %v", err3)
@@ -111,6 +111,8 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 			searchItem.UserName = user.Name
 		}
 		//searchItem.UserName = "sadf"
+		searchItem.UserId = item.UserId
+
 		searchItem.Id = item.Id
 		searchItem.Name = item.Name
 		searchItem.Brand = item.Brand
