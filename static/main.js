@@ -34,7 +34,7 @@ function buildItemTable(json) {
             $('<th>').html('Brand'),
             $('<th>').html('Price')
         ),
-        ...json.map((item) => {
+        ...(json || []).map((item) => {
             return $('<tr>').append(
                 $('<td>').html(item.id),
                 $('<td>').html(item.name),
@@ -83,7 +83,7 @@ function buildUserTable(json) {
             $('<th>').html('Email'),
             $('<th>').html('Phone')
         ),
-        ...json.map((item) => {
+        ...(json || []).map((item) => {
             return $('<tr>').append(
                 $('<td>').html(item.id),
                 $('<td>').html(item.name),
@@ -113,15 +113,19 @@ function buildSearchResults(json) {
         $('<tr>').append(
             $('<th>').html('ID'),
             $('<th>').html('Name'),
-            $('<th>').html('Email'),
-            $('<th>').html('Phone')
+            $('<th>').html('Brand'),
+            $('<th>').html('Price'),
+            $('<th>').html('User ID'),
+            $('<th>').html('User Name')
         ),
-        ...json.map((result) => {
+        ...(json || []).map((result) => {
             return $('<tr>').append(
                 $('<td>').html(result.id),
                 $('<td>').html(result.name),
-                $('<td>').html(result.email),
-                $('<td>').html(result.phone)
+                $('<td>').html(result.brand),
+                $('<td>').html(result.price),
+                $('<td>').html(result.userId),
+                $('<td>').html(result.userName)
             )
         })
     );
