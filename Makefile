@@ -14,3 +14,4 @@ start:
 	go run ./user-service/server/main.go &
 	go run ./item-service/server/main.go &
 	go run ./search-service/server/main.go &
+	cd web-server && go run main.go &
