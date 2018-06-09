@@ -22,13 +22,14 @@ import (
 	"log"
 	"time"
 
+	pb "github.com/timothympace/tradesy-go-hackathon/item-service/item"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "../item"
 )
 
 const (
-	address     = "localhost:9090"
+	address = "localhost:9090"
 )
 
 func main() {

@@ -21,13 +21,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
-	"fmt"
+
+	pb "github.com/timothympace/tradesy-go-hackathon/item-service/item"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "../item"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -50,7 +51,7 @@ func (s *server) GetItem(ctx context.Context, in *pb.Id) (*pb.Item, error) {
 	return nil, fmt.Errorf("item doesn't exist")
 }
 
-func (s *server) GetItems(in *pb.Empty, stream pb.ItemApi_GetItemsServer) (error) {
+func (s *server) GetItems(in *pb.Empty, stream pb.ItemApi_GetItemsServer) error {
 	for _, item := range items {
 		if err := stream.Send(item); err != nil {
 			return err
@@ -99,6 +100,22 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
+	item := &pb.Item{Name: "Red shirt", Id: "1000"}
+	items = append(items, item)
+	item = &pb.Item{Name: "Green shirt", Id: "1001"}
+	items = append(items, item)
+	item = &pb.Item{Name: "Yellow shirt", Id: "1002"}
+	items = append(items, item)
+	item = &pb.Item{Name: "Black pants", Id: "1003"}
+	items = append(items, item)
+	item = &pb.Item{Name: "Blue pants", Id: "1004"}
+	items = append(items, item)
+	item = &pb.Item{Name: "White shoes", Id: "1005"}
+	items = append(items, item)
+	item = &pb.Item{Name: "Blue shoes", Id: "1006"}
+	items = append(items, item)
+
 	s := grpc.NewServer()
 	pb.RegisterItemApiServer(s, &server{})
 	// Register reflection service on gRPC server.
