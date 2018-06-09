@@ -93,6 +93,23 @@ func main() {
 	}
 	server.savedUsers = append(server.savedUsers, user)
 
+	user = &pb.User{
+		Id:    "100",
+		Name:  "Timothy Pace",
+		Email: "timp@tradesy.com",
+		Phone: "111-222-3344",
+		Addresses: []*pb.User_Address{
+			&pb.User_Address{
+				Street:            "444 Mission Street",
+				City:              "San Francisco",
+				State:             "CA",
+				Zip:               "94106",
+				IsShippingAddress: true,
+			},
+		},
+	}
+	server.savedUsers = append(server.savedUsers, user)
+
 	// Creates a new gRPC server
 	s := grpc.NewServer()
 
