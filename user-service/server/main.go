@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	port = ":50051"
+	port = ":9091"
 )
 
 // server is used to implement user.UserServer.
@@ -58,7 +58,7 @@ func (s *server) GetUser(filter *pb.UserFilter, stream pb.UserApi_GetUserServer)
 func (s *server) DeleteUser(ctx context.Context, filter *pb.UserFilter) (*pb.UserResponse, error) {
 	for i, user := range s.savedUsers {
 		if filter.Id != "" {
-			if !strings.Contains(user.Name, filter.Id) {
+			if strings.Contains(user.Id, filter.Id) {
 				s.savedUsers = append(s.savedUsers[:i], s.savedUsers[i+1:]...)
 				return &pb.UserResponse{Id: filter.Id, Success: true}, nil
 			}
@@ -72,8 +72,28 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
+	server := &server{}
+	user := &pb.User{
+		Id:    "99",
+		Name:  "Dmitriy Labitov",
+		Email: "dmitriy@labitov.com",
+		Phone: "444-444-55555",
+		Addresses: []*pb.User_Address{
+			&pb.User_Address{
+				Street:            "444 Mission Street",
+				City:              "San Francisco",
+				State:             "CA",
+				Zip:               "94106",
+				IsShippingAddress: true,
+			},
+		},
+	}
+	server.savedUsers = append(server.savedUsers, user)
+
 	// Creates a new gRPC server
 	s := grpc.NewServer()
-	pb.RegisterUserApiServer(s, &server{})
+
+	pb.RegisterUserApiServer(s, server)
 	s.Serve(lis)
 }
