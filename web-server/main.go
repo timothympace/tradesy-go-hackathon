@@ -9,6 +9,7 @@ import (
 	"time"
 	"context"
 	"google.golang.org/grpc"
+	"fmt"
 )
 
 const (
@@ -57,6 +58,22 @@ func addItem(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+func deleteItem(w http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	id := &itemPb.Id{}
+	err := json.NewDecoder(req.Body).Decode(id)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	fmt.Println(id.Id)
+	itemApiClient.DeleteItem(ctx, id)
+	w.WriteHeader(http.StatusOK)
+}
+
 func handlePublic(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../" + r.URL.Path[1:])
 }
@@ -71,6 +88,7 @@ func main() {
 
 	http.HandleFunc("/allItems", allItems)
 	http.HandleFunc("/addItem", addItem)
+	http.HandleFunc("/deleteItem", deleteItem)
 	http.HandleFunc("/static/", handlePublic)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

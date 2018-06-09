@@ -7,7 +7,17 @@
 </head>
 <body>
 
-<form id="item-form" method="POST">
+<form id="item-list-form" method="POST">
+    <h2>List Items</h2>
+    <button>Submit</button>
+</form>
+
+<div id="item-list-table">
+
+</div>
+
+<form id="item-add-form" method="POST">
+    <h2>Add Item</h2>
     <label for="id">ID</label>
     <input id="id" name="id">
     <br>
@@ -19,6 +29,14 @@
     <br>
     <label for="price">Price</label>
     <input id="price" name="price">
+    <br>
+    <button>Submit</button>
+</form>
+
+<form id="item-delete-form" method="POST">
+    <h2>Delete Item</h2>
+    <label for="id">ID</label>
+    <input id="id" name="id">
     <br>
     <button>Submit</button>
 </form>
