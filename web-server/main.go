@@ -57,7 +57,7 @@ func addItem(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func handleStatic(w http.ResponseWriter, r *http.Request) {
+func handlePublic(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../" + r.URL.Path[1:])
 }
 
@@ -71,6 +71,6 @@ func main() {
 
 	http.HandleFunc("/allItems", allItems)
 	http.HandleFunc("/addItem", addItem)
-	http.HandleFunc("/static/", handleStatic)
+	http.HandleFunc("/static/", handlePublic)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
