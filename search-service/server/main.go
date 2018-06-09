@@ -102,6 +102,9 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 			if err3 == io.EOF {
 				break
 			}
+			if item.UserId == "" { //getting late
+				break
+			}
 			if err3 != nil {
 				log.Fatalf("%v.GetUser(_) = _, %v", userApiClient, err3)
 			}
