@@ -6,19 +6,22 @@ import (
 	"log"
 
 	itemPb "../item-service/item"
+	userPb "../user-service/user"
+	searchPb "../search-service/search"
 	"time"
 	"context"
 	"google.golang.org/grpc"
-	userPb "../user-service/user"
 )
 
 const (
-	address     = "localhost:9090"
-	address2     = "localhost:9091"
+	addressItem   = "localhost:9090"
+	addressUser   = "localhost:9091"
+	addressSearch = "localhost:9092"
 )
 
 var itemApiClient itemPb.ItemApiClient
 var userApiClient userPb.UserApiClient
+var searchApiClient searchPb.SearchApiClient
 
 func allItems(w http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -130,24 +133,59 @@ func deleteUser(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func getItemByName(w http.ResponseWriter, req *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	filter := &searchPb.SearchFilter{}
+	err := json.NewDecoder(req.Body).Decode(filter)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	itemStream, err := searchApiClient.GetItemByName(ctx, filter)
+
+
+	var items []*searchPb.Item
+	for {
+		item, err := itemStream.Recv()
+		if err != nil {
+			break
+		}
+		items = append(items, item)
+	}
+
+	itemJSON, _ := json.Marshal(items)
+	w.WriteHeader(http.StatusOK)
+	w.Write(itemJSON)
+}
+
 func handlePublic(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../" + r.URL.Path[1:])
 }
 
 func main() {
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(addressItem, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	itemApiClient = itemPb.NewItemApiClient(conn)
 
-	conn, err = grpc.Dial(address2, grpc.WithInsecure())
+	conn, err = grpc.Dial(addressUser, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	userApiClient = userPb.NewUserApiClient(conn)
+
+	conn, err = grpc.Dial(addressSearch, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	searchApiClient = searchPb.NewSearchApiClient(conn)
 
 	http.HandleFunc("/allItems", allItems)
 	http.HandleFunc("/allUsers", allUsers)
@@ -155,6 +193,7 @@ func main() {
 	http.HandleFunc("/addUser", addUser)
 	http.HandleFunc("/deleteItem", deleteItem)
 	http.HandleFunc("/deleteUser", deleteUser)
+	http.HandleFunc("/getItemByName", getItemByName)
 	http.HandleFunc("/static/", handlePublic)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

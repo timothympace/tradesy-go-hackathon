@@ -105,3 +105,37 @@ $('#user-list-form').on('submit', (e) => {
     });
     e.preventDefault();
 });
+
+// Searches -----------
+
+function buildSearchResults(json) {
+    const table = $('<table>').append(
+        $('<tr>').append(
+            $('<th>').html('ID'),
+            $('<th>').html('Name'),
+            $('<th>').html('Email'),
+            $('<th>').html('Phone')
+        ),
+        ...json.map((result) => {
+            return $('<tr>').append(
+                $('<td>').html(result.id),
+                $('<td>').html(result.name),
+                $('<td>').html(result.email),
+                $('<td>').html(result.phone)
+            )
+        })
+    );
+
+    $('#search-results').html(table)
+}
+
+$('#searches-form').on('submit', (e) => {
+    const json = {};
+    json['name'] = $('[name="name"]', e.target).val();
+    postData('/getItemByName', json).then((response) => {
+        response.json().then(function(data) {
+            buildSearchResults(data);
+        });
+    });
+    e.preventDefault();
+});
