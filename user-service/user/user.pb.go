@@ -25,11 +25,11 @@ const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 // Request message for creating a new user
 type User struct {
-	Id                   string          `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-	Name                 string          `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
-	Email                string          `protobuf:"bytes,3,opt,name=email" json:"email,omitempty"`
-	Phone                string          `protobuf:"bytes,4,opt,name=phone" json:"phone,omitempty"`
-	Addresses            []*User_Address `protobuf:"bytes,5,rep,name=addresses" json:"addresses,omitempty"`
+	Id                   string          `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string          `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Email                string          `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Phone                string          `protobuf:"bytes,4,opt,name=phone,proto3" json:"phone,omitempty"`
+	Addresses            []*User_Address `protobuf:"bytes,5,rep,name=addresses,proto3" json:"addresses,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
 	XXX_unrecognized     []byte          `json:"-"`
 	XXX_sizecache        int32           `json:"-"`
@@ -95,11 +95,11 @@ func (m *User) GetAddresses() []*User_Address {
 }
 
 type User_Address struct {
-	Street               string   `protobuf:"bytes,1,opt,name=street" json:"street,omitempty"`
-	City                 string   `protobuf:"bytes,2,opt,name=city" json:"city,omitempty"`
-	State                string   `protobuf:"bytes,3,opt,name=state" json:"state,omitempty"`
-	Zip                  string   `protobuf:"bytes,4,opt,name=zip" json:"zip,omitempty"`
-	IsShippingAddress    bool     `protobuf:"varint,5,opt,name=isShippingAddress" json:"isShippingAddress,omitempty"`
+	Street               string   `protobuf:"bytes,1,opt,name=street,proto3" json:"street,omitempty"`
+	City                 string   `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
+	State                string   `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
+	Zip                  string   `protobuf:"bytes,4,opt,name=zip,proto3" json:"zip,omitempty"`
+	IsShippingAddress    bool     `protobuf:"varint,5,opt,name=isShippingAddress,proto3" json:"isShippingAddress,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -165,8 +165,8 @@ func (m *User_Address) GetIsShippingAddress() bool {
 }
 
 type UserResponse struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-	Success              bool     `protobuf:"varint,2,opt,name=success" json:"success,omitempty"`
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Success              bool     `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -211,7 +211,7 @@ func (m *UserResponse) GetSuccess() bool {
 }
 
 type UserFilter struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -263,8 +263,9 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// Client API for UserApi service
-
+// UserApiClient is the client API for UserApi service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type UserApiClient interface {
 	// Get User by ID - A server-to-client streaming RPC.
 	GetUser(ctx context.Context, in *UserFilter, opts ...grpc.CallOption) (UserApi_GetUserClient, error)
@@ -285,7 +286,7 @@ func NewUserApiClient(cc *grpc.ClientConn) UserApiClient {
 }
 
 func (c *userApiClient) GetUser(ctx context.Context, in *UserFilter, opts ...grpc.CallOption) (UserApi_GetUserClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_UserApi_serviceDesc.Streams[0], c.cc, "/user.UserApi/GetUser", opts...)
+	stream, err := c.cc.NewStream(ctx, &_UserApi_serviceDesc.Streams[0], "/user.UserApi/GetUser", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -318,7 +319,7 @@ func (x *userApiGetUserClient) Recv() (*User, error) {
 
 func (c *userApiClient) AddUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*UserResponse, error) {
 	out := new(UserResponse)
-	err := grpc.Invoke(ctx, "/user.UserApi/AddUser", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserApi/AddUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -327,7 +328,7 @@ func (c *userApiClient) AddUser(ctx context.Context, in *User, opts ...grpc.Call
 
 func (c *userApiClient) UpdateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*UserResponse, error) {
 	out := new(UserResponse)
-	err := grpc.Invoke(ctx, "/user.UserApi/UpdateUser", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserApi/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -336,15 +337,14 @@ func (c *userApiClient) UpdateUser(ctx context.Context, in *User, opts ...grpc.C
 
 func (c *userApiClient) DeleteUser(ctx context.Context, in *UserFilter, opts ...grpc.CallOption) (*UserResponse, error) {
 	out := new(UserResponse)
-	err := grpc.Invoke(ctx, "/user.UserApi/DeleteUser", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/user.UserApi/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// Server API for UserApi service
-
+// UserApiServer is the server API for UserApi service.
 type UserApiServer interface {
 	// Get User by ID - A server-to-client streaming RPC.
 	GetUser(*UserFilter, UserApi_GetUserServer) error

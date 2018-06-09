@@ -25,12 +25,12 @@ const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 // The request message containing the user's name.
 type Item struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
-	Brand                string   `protobuf:"bytes,3,opt,name=brand" json:"brand,omitempty"`
-	Price                float32  `protobuf:"fixed32,4,opt,name=price" json:"price,omitempty"`
-	UserId               string   `protobuf:"bytes,5,opt,name=userId" json:"userId,omitempty"`
-	UserName             string   `protobuf:"bytes,6,opt,name=userName" json:"userName,omitempty"`
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Brand                string   `protobuf:"bytes,3,opt,name=brand,proto3" json:"brand,omitempty"`
+	Price                float32  `protobuf:"fixed32,4,opt,name=price,proto3" json:"price,omitempty"`
+	UserId               string   `protobuf:"bytes,5,opt,name=userId,proto3" json:"userId,omitempty"`
+	UserName             string   `protobuf:"bytes,6,opt,name=userName,proto3" json:"userName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -103,7 +103,7 @@ func (m *Item) GetUserName() string {
 }
 
 type SearchFilter struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -153,8 +153,9 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// Client API for SearchApi service
-
+// SearchApiClient is the client API for SearchApi service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SearchApiClient interface {
 	GetItemByName(ctx context.Context, in *SearchFilter, opts ...grpc.CallOption) (SearchApi_GetItemByNameClient, error)
 }
@@ -168,7 +169,7 @@ func NewSearchApiClient(cc *grpc.ClientConn) SearchApiClient {
 }
 
 func (c *searchApiClient) GetItemByName(ctx context.Context, in *SearchFilter, opts ...grpc.CallOption) (SearchApi_GetItemByNameClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_SearchApi_serviceDesc.Streams[0], c.cc, "/search.SearchApi/GetItemByName", opts...)
+	stream, err := c.cc.NewStream(ctx, &_SearchApi_serviceDesc.Streams[0], "/search.SearchApi/GetItemByName", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -199,8 +200,7 @@ func (x *searchApiGetItemByNameClient) Recv() (*Item, error) {
 	return m, nil
 }
 
-// Server API for SearchApi service
-
+// SearchApiServer is the server API for SearchApi service.
 type SearchApiServer interface {
 	GetItemByName(*SearchFilter, SearchApi_GetItemByNameServer) error
 }
