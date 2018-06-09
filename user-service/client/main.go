@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	address = "localhost:50051"
+	address = "localhost:9091"
 )
 
 // AddUser calls the RPC method AddUser of UserApiClient
@@ -28,6 +28,7 @@ func addUser(client pb.UserApiClient, user *pb.User) {
 // UpdateUser calls the RPC method UpdateUser of UserApiClient
 func updateUser(client pb.UserApiClient, user *pb.User) {
 	resp, err := client.UpdateUser(context.Background(), user)
+	//log.Printf("%v, %v", resp, err)
 	if err != nil {
 		log.Fatalf("Could not update User: %v", err)
 	}
@@ -38,6 +39,7 @@ func updateUser(client pb.UserApiClient, user *pb.User) {
 
 func deleteUser(client pb.UserApiClient, filter *pb.UserFilter) {
 	resp, err := client.DeleteUser(context.Background(), filter)
+	//log.Printf("resp: %v, err: %v", resp, err)
 	if err != nil {
 		log.Fatalf("Could not delete User: %v", err)
 	}
@@ -49,7 +51,8 @@ func deleteUser(client pb.UserApiClient, filter *pb.UserFilter) {
 // getCustomers calls the RPC method GetCustomers of CustomerServer
 func getUser(client pb.UserApiClient, filter *pb.UserFilter) {
 	// calling the streaming API
-	stream, err := client.GetUser(context.Background(), filter)
+	stream, err :=
+		client.GetUser(context.Background(), filter)
 	if err != nil {
 		log.Fatalf("Error on get user: %v", err)
 	}
@@ -75,6 +78,7 @@ func main() {
 	// Creates a new CustomerClient
 	client := pb.NewUserApiClient(conn)
 
+	// Create a new customer
 	user := &pb.User{
 		Id:    "101",
 		Name:  "Shiju Varghese",
@@ -97,10 +101,9 @@ func main() {
 			},
 		},
 	}
-
-	// Create a new customer
 	addUser(client, user)
 
+	// Create a new user
 	user = &pb.User{
 		Id:    "102",
 		Name:  "Irene Rose",
@@ -116,10 +119,13 @@ func main() {
 			},
 		},
 	}
-
-	// Create a new user
 	addUser(client, user)
 
+	// Update a user
+	user.Name = "Tim Rose"
+	updateUser(client, user)
+
+	// Create a new user
 	user = &pb.User{
 		Id:    "100",
 		Name:  "Chuck Berry",
@@ -135,13 +141,7 @@ func main() {
 			},
 		},
 	}
-
-	// Create a new user
 	addUser(client, user)
-
-	// Update a user
-	user.Name = "Tim Rose"
-	updateUser(client, user)
 
 	// Delete a user
 	filter := &pb.UserFilter{Id: "101"}
