@@ -15,6 +15,7 @@ $('#item-add-form').on('submit', (e) => {
     json['name'] = $('[name="name"]', e.target).val();
     json['brand'] = $('[name="brand"]', e.target).val();
     json['price'] = parseFloat($('[name="price"]', e.target).val());
+    json['userId'] = $('[name="userId"]', e.target).val();
     postData('/addItem', json);
     e.preventDefault();
 });
@@ -32,14 +33,16 @@ function buildItemTable(json) {
             $('<th>').html('ID'),
             $('<th>').html('Name'),
             $('<th>').html('Brand'),
-            $('<th>').html('Price')
+            $('<th>').html('Price'),
+            $('<th>').html('User ID')
         ),
         ...(json || []).map((item) => {
             return $('<tr>').append(
                 $('<td>').html(item.id),
                 $('<td>').html(item.name),
                 $('<td>').html(item.brand),
-                $('<td>').html(item.price)
+                $('<td>').html(item.price),
+                $('<td>').html(item.userId)
             )
         })
     );

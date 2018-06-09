@@ -6,6 +6,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <style>
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    th {
+        text-align: left;
+    }
+
     .title {
         margin: 0;
         border: 1px solid black;
@@ -60,6 +69,9 @@
             <br>
             <label for="price">Price</label>
             <input id="price" name="price">
+            <br>
+            <label for="userId">User ID</label>
+            <input id="userId" name="userId">
             <br>
             <button>Submit</button>
         </form>

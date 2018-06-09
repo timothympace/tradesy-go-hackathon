@@ -24,11 +24,11 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type Item struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
-	Brand                string   `protobuf:"bytes,3,opt,name=brand" json:"brand,omitempty"`
-	Price                float32  `protobuf:"fixed32,4,opt,name=price" json:"price,omitempty"`
-	UserId               string   `protobuf:"bytes,5,opt,name=userId" json:"userId,omitempty"`
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Brand                string   `protobuf:"bytes,3,opt,name=brand,proto3" json:"brand,omitempty"`
+	Price                float32  `protobuf:"fixed32,4,opt,name=price,proto3" json:"price,omitempty"`
+	UserId               string   `protobuf:"bytes,5,opt,name=userId,proto3" json:"userId,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -94,7 +94,7 @@ func (m *Item) GetUserId() string {
 }
 
 type Id struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -175,8 +175,9 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// Client API for ItemApi service
-
+// ItemApiClient is the client API for ItemApi service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ItemApiClient interface {
 	GetItem(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Item, error)
 	GetItems(ctx context.Context, in *Empty, opts ...grpc.CallOption) (ItemApi_GetItemsClient, error)
@@ -195,7 +196,7 @@ func NewItemApiClient(cc *grpc.ClientConn) ItemApiClient {
 
 func (c *itemApiClient) GetItem(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Item, error) {
 	out := new(Item)
-	err := grpc.Invoke(ctx, "/item.ItemApi/GetItem", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/item.ItemApi/GetItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +204,7 @@ func (c *itemApiClient) GetItem(ctx context.Context, in *Id, opts ...grpc.CallOp
 }
 
 func (c *itemApiClient) GetItems(ctx context.Context, in *Empty, opts ...grpc.CallOption) (ItemApi_GetItemsClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_ItemApi_serviceDesc.Streams[0], c.cc, "/item.ItemApi/GetItems", opts...)
+	stream, err := c.cc.NewStream(ctx, &_ItemApi_serviceDesc.Streams[0], "/item.ItemApi/GetItems", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -236,7 +237,7 @@ func (x *itemApiGetItemsClient) Recv() (*Item, error) {
 
 func (c *itemApiClient) AddItem(ctx context.Context, in *Item, opts ...grpc.CallOption) (*Id, error) {
 	out := new(Id)
-	err := grpc.Invoke(ctx, "/item.ItemApi/AddItem", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/item.ItemApi/AddItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +246,7 @@ func (c *itemApiClient) AddItem(ctx context.Context, in *Item, opts ...grpc.Call
 
 func (c *itemApiClient) DeleteItem(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Id, error) {
 	out := new(Id)
-	err := grpc.Invoke(ctx, "/item.ItemApi/DeleteItem", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/item.ItemApi/DeleteItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -254,15 +255,14 @@ func (c *itemApiClient) DeleteItem(ctx context.Context, in *Id, opts ...grpc.Cal
 
 func (c *itemApiClient) UpdateItem(ctx context.Context, in *Item, opts ...grpc.CallOption) (*Id, error) {
 	out := new(Id)
-	err := grpc.Invoke(ctx, "/item.ItemApi/UpdateItem", in, out, c.cc, opts...)
+	err := c.cc.Invoke(ctx, "/item.ItemApi/UpdateItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// Server API for ItemApi service
-
+// ItemApiServer is the server API for ItemApi service.
 type ItemApiServer interface {
 	GetItem(context.Context, *Id) (*Item, error)
 	GetItems(*Empty, ItemApi_GetItemsServer) error
