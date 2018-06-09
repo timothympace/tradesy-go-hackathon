@@ -44,7 +44,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	filter := &pb.SearchFilter{Name: "Blue"}
+	filter := &pb.SearchFilter{Name: "Red"}
 	items, err := c.GetItemByName(ctx, filter)
 	if err != nil {
 		log.Fatalf("could not get all items: %v", err)

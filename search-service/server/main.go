@@ -21,6 +21,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strings"
@@ -28,6 +29,7 @@ import (
 
 	pbItem "github.com/timothympace/tradesy-go-hackathon/item-service/item"
 	pbSearch "github.com/timothympace/tradesy-go-hackathon/search-service/search"
+	pbUser "github.com/timothympace/tradesy-go-hackathon/user-service/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -35,11 +37,10 @@ import (
 const (
 	port        = ":9092"
 	addressItem = "localhost:9090" //item
+	addressUser = "localhost:9091" //user
 )
 
 type server struct{}
-
-var itemApiClient pbItem.ItemApiClient
 
 func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.SearchApi_GetItemByNameServer) error {
 	// Set up a connection to the server.
@@ -48,22 +49,37 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	itemApiClient := pbItem.NewItemApiClient(conn)
 
+	// Get instance of item api client
+	itemApiClient := pbItem.NewItemApiClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
+	// fucking magic here
 	itemStream, err := itemApiClient.GetItems(ctx, &pbItem.Empty{})
 	if err != nil {
 		log.Fatalf("could not get all items: %v", err)
 	}
+
+	//TODO Dont do this in prod, write a smarter getter
+	// Set up a connection to the server.
+	conn2, err2 := grpc.Dial(addressUser, grpc.WithInsecure())
+	if err2 != nil {
+		log.Fatalf("did not connect: %v", err2)
+	}
+	defer conn2.Close()
+
+	// Get instance of item api client
+	userApiClient := pbUser.NewUserApiClient(conn2)
+	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second)
+	defer cancel2()
 
 	for {
 		item, err := itemStream.Recv()
 		if err != nil {
 			break
 		}
-		fmt.Printf("Item: %v", item)
+		//fmt.Printf("Item: %v", item)
 
 		if filter.Name != "" {
 			if !strings.Contains(item.Name, filter.Name) {
@@ -71,7 +87,30 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 			}
 		}
 
+		// calling the streaming API
+		userFilter := &pbUser.UserFilter{Id: item.Id}
+		userStream, err3 := userApiClient.GetUser(ctx2, userFilter)
+		if err3 != nil {
+			log.Fatalf("Error on get user: %v", err3)
+		}
+
 		searchItem := &pbSearch.Item{}
+		for {
+			// Receiving the stream of data
+			user, err3 := userStream.Recv()
+			fmt.Println(user)
+			if err3 == io.EOF {
+				break
+			}
+			if err3 != nil {
+				log.Fatalf("%v.GetUser(_) = _, %v", userApiClient, err3)
+			}
+			//log.Printf("User: %v", user)
+
+			searchItem.UserId = user.Id
+			searchItem.UserName = user.Name
+		}
+		//searchItem.UserName = "sadf"
 		searchItem.Id = item.Id
 		searchItem.Name = item.Name
 		searchItem.Brand = item.Brand

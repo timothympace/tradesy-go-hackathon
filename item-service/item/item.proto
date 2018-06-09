@@ -29,6 +29,7 @@ message Item {
     string name = 2;
     string brand = 3;
     float price = 4;
+    string userId = 5;
 }
 
 message Id {

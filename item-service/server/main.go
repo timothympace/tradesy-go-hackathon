@@ -101,19 +101,19 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	item := &pb.Item{Name: "Red shirt", Id: "1000"}
+	item := &pb.Item{Name: "Red shirt", Id: "1000", UserId: "99"}
 	items = append(items, item)
-	item = &pb.Item{Name: "Green shirt", Id: "1001"}
+	item = &pb.Item{Name: "Green shirt", Id: "1001", UserId: "99"}
 	items = append(items, item)
-	item = &pb.Item{Name: "Yellow shirt", Id: "1002"}
+	item = &pb.Item{Name: "Yellow shirt", Id: "1002", UserId: "99"}
 	items = append(items, item)
-	item = &pb.Item{Name: "Black pants", Id: "1003"}
+	item = &pb.Item{Name: "Black pants", Id: "1003", UserId: "100"}
 	items = append(items, item)
-	item = &pb.Item{Name: "Blue pants", Id: "1004"}
+	item = &pb.Item{Name: "Blue pants", Id: "1004", UserId: "100"}
 	items = append(items, item)
-	item = &pb.Item{Name: "White shoes", Id: "1005"}
+	item = &pb.Item{Name: "White shoes", Id: "1005", UserId: "100"}
 	items = append(items, item)
-	item = &pb.Item{Name: "Blue shoes", Id: "1006"}
+	item = &pb.Item{Name: "Blue shoes", Id: "1006", UserId: "100"}
 	items = append(items, item)
 
 	s := grpc.NewServer()
