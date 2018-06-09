@@ -20,8 +20,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	pbItem "github.com/timothympace/tradesy-go-hackathon/item-service/item"
@@ -31,7 +33,8 @@ import (
 )
 
 const (
-	port = ":9092"
+	port        = ":9092"
+	addressItem = "localhost:9090" //item
 )
 
 type server struct{}
@@ -39,6 +42,13 @@ type server struct{}
 var itemApiClient pbItem.ItemApiClient
 
 func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.SearchApi_GetItemByNameServer) error {
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(addressItem, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	itemApiClient := pbItem.NewItemApiClient(conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
@@ -53,8 +63,15 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 		if err != nil {
 			break
 		}
+		fmt.Printf("Item: %v", item)
 
-		var searchItem *pbSearch.Item
+		if filter.Name != "" {
+			if !strings.Contains(item.Name, filter.Name) {
+				continue
+			}
+		}
+
+		searchItem := &pbSearch.Item{}
 		searchItem.Id = item.Id
 		searchItem.Name = item.Name
 		searchItem.Brand = item.Brand
