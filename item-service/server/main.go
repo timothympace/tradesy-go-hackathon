@@ -101,19 +101,21 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	item := &pb.Item{Name: "Red shirt", Id: "1000", UserId: "99"}
+	item := &pb.Item{Name: "Red shirt", Id: "1000", UserId: "99", Brand: "Louis Vuitton", Price: 19.99}
 	items = append(items, item)
-	item = &pb.Item{Name: "Green shirt", Id: "1001", UserId: "99"}
+	item = &pb.Item{Name: "Green shirt", Id: "1001", UserId: "99", Brand: "Chanel", Price: 49.99}
 	items = append(items, item)
-	item = &pb.Item{Name: "Yellow shirt", Id: "1002", UserId: "99"}
+	item = &pb.Item{Name: "Yellow shirt", Id: "1002", UserId: "99", Brand: "Hermes", Price: 9.99}
 	items = append(items, item)
-	item = &pb.Item{Name: "Black pants", Id: "1003", UserId: "100"}
+	item = &pb.Item{Name: "Black pants", Id: "1003", UserId: "100", Brand: "Gucci", Price: 250.00}
 	items = append(items, item)
-	item = &pb.Item{Name: "Blue pants", Id: "1004", UserId: "100"}
+	item = &pb.Item{Name: "Blue pants", Id: "1004", UserId: "100", Brand: "Prada", Price: 500}
 	items = append(items, item)
-	item = &pb.Item{Name: "White shoes", Id: "1005", UserId: "100"}
+	item = &pb.Item{Name: "White shoes", Id: "1005", UserId: "100", Brand: "Saint Laurent", Price: 437.99}
 	items = append(items, item)
-	item = &pb.Item{Name: "Blue shoes", Id: "1006", UserId: "100"}
+	item = &pb.Item{Name: "Blue shoes", Id: "1006", UserId: "100", Brand: "Balenciaga", Price: 199.99}
+	items = append(items, item)
+	item = &pb.Item{Name: "Blue shirt", Id: "1007", UserId: "100", Brand: "Chanel", Price: 199.99}
 	items = append(items, item)
 
 	s := grpc.NewServer()
