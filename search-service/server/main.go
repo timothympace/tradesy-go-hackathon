@@ -51,12 +51,12 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 	defer conn.Close()
 
 	// Get instance of item api client
-	itemApiClient := pbItem.NewItemApiClient(conn)
+	itemAPIClient := pbItem.NewItemApiClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	// fucking magic here
-	itemStream, err := itemApiClient.GetItems(ctx, &pbItem.Empty{})
+	itemStream, err := itemAPIClient.GetItems(ctx, &pbItem.Empty{})
 	if err != nil {
 		log.Fatalf("could not get all items: %v", err)
 	}
@@ -70,7 +70,7 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 	defer conn2.Close()
 
 	// Get instance of item api client
-	userApiClient := pbUser.NewUserApiClient(conn2)
+	userAPIClient := pbUser.NewUserApiClient(conn2)
 	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second)
 	defer cancel2()
 
@@ -89,7 +89,7 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 
 		// calling the streaming API
 		userFilter := &pbUser.UserFilter{Id: item.UserId}
-		userStream, err3 := userApiClient.GetUser(ctx2, userFilter)
+		userStream, err3 := userAPIClient.GetUser(ctx2, userFilter)
 		if err3 != nil {
 			log.Fatalf("Error on get user: %v", err3)
 		}
@@ -106,7 +106,7 @@ func (s *server) GetItemByName(filter *pbSearch.SearchFilter, stream pbSearch.Se
 				break
 			}
 			if err3 != nil {
-				log.Fatalf("%v.GetUser(_) = _, %v", userApiClient, err3)
+				log.Fatalf("%v.GetUser(_) = _, %v", userAPIClient, err3)
 			}
 			//log.Printf("User: %v", user)
 
